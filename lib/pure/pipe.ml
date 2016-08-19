@@ -21,9 +21,10 @@ module type S = sig
   val yield : 'o -> (_, 'o, unit) t
   val compose : ('i, 'a, _) t -> ('a, 'o, 'r) t -> ('i, 'o, 'r) t
   val ( $$ ) : ('i, 'a, _) t -> ('a, 'o, 'r) t -> ('i, 'o, 'r) t
-  val run : (unit, void, 'r) t -> 'r monad
+  val run : (void, void, 'r) t -> 'r monad
 
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
+  val from_list : 'a list -> (void, 'a, unit) t
 end
 
 module Make(M : Monad) = struct
@@ -135,6 +136,15 @@ module Make(M : Monad) = struct
         | Some i -> fold (f i init) f
       )
 
+  let from_list l =
+    let open Monad_infix in
+    let rec loop = function
+      | [] -> Done ()
+      | h :: t ->
+        yield h >>= fun () ->
+        loop t
+    in
+    loop l
 end
 
 include Make(struct
