@@ -1,0 +1,13 @@
+OASISFormat: 0.4
+Name:        pipes
+Version:     0.0
+Synopsis:    A library for stream programming
+Authors:     Philippe Veber <philippe.veber@gmail.com>
+License:     LGPL-2.1 with OCaml linking exception
+Plugins:     META (0.4), DevFiles (0.4)
+
+Library pipes
+  Path:       lib
+  BuildTools: ocamlbuild
+  Modules:    Pipe
+  
