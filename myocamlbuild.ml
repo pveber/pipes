@@ -22,7 +22,11 @@ let make_app ?findlib_deps ?internal_deps name : Project.item =
     ?findlib_deps
     ?internal_deps
 
-let pure = make_lib "pure"
+let pure =
+  Project.lib "pure"
+    ~pkg:"pipes"
+    ~dir:"lib/pure"
+    ~style:`Basic
 
 let benchmark =
   make_lib "benchmark"
