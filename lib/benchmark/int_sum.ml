@@ -3,15 +3,18 @@ open CFStream
 open Core_bench.Std
 
 let l = List.init 1_000 ~f:ident
-let s = List.sum (module Int) ~f:ident l
+let s = List.sum (module Int) ~f:succ l
 
 let list_int_sum () =
-  let n = List.fold l ~init:0 ~f:( + ) in
+  let n =
+    List.map l ~f:succ
+    |> List.fold ~init:0 ~f:( + ) in
   assert (n = s)
 
 let stream_int_sum () =
   let n =
     Stream.of_list l
+    |> Stream.map ~f:succ
     |> Stream.fold ~init:0 ~f:( + )
   in
   assert (n = s)
@@ -19,7 +22,11 @@ let stream_int_sum () =
 let pipe_int_sum () =
   let open Pipes_pure.Pipe in
   let n =
-    run (from_list l $$ fold 0 ( + ))
+    run (
+      from_list l
+      $$ map succ
+      $$ fold 0 ( + )
+    )
   in
   assert (n = s)
 

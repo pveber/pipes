@@ -24,6 +24,7 @@ module type S = sig
   val run : (void, void, 'r) t -> 'r monad
 
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
+  val map : ('i -> 'o) -> ('i, 'o, unit) t
   val from_list : 'a list -> (void, 'a, unit) t
 end
 
@@ -135,6 +136,13 @@ module Make(M : Monad) = struct
         | None -> Done init
         | Some i -> fold (f i init) f
       )
+
+  let rec map f =
+    let open Monad_infix in
+    await () >>= function
+    | None -> return ()
+    | Some x ->
+      yield (f x) >>= fun () -> map f
 
   let from_list l =
     let open Monad_infix in

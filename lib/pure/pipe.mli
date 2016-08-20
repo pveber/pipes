@@ -24,6 +24,7 @@ module type S = sig
   val run : (void, void, 'r) t -> 'r monad
 
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
+  val map : ('i -> 'o) -> ('i, 'o, unit) t
 
   val from_list : 'a list -> (void, 'a, unit) t
 end
