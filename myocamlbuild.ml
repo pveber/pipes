@@ -24,12 +24,16 @@ let make_app ?findlib_deps ?internal_deps name : Project.item =
 
 let pure = make_lib "pure"
 
+let parsers = make_lib "parsers"
+    ~internal_deps:[pure]
+    ~findlib_deps:["core_kernel"]
+
 let benchmark =
   make_lib "benchmark"
     ~internal_deps:[pure]
     ~findlib_deps:["cfstream" ; "core_bench"]
 
-let libs = [pure ; benchmark]
+let libs = [pure ; parsers ; benchmark]
 let apps = [
   make_app "bench" ~internal_deps:[benchmark]
 ]
