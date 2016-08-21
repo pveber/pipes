@@ -16,3 +16,5 @@ let step st input = match input, st with
       match Line.make b with
       | [] -> assert false (* [Line.make] never returns an empty list *)
       | h :: t -> Current_line a, (Line.append l h) :: t
+
+let reader = Pipe.loop step initial_state
