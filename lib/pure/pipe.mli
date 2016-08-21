@@ -36,6 +36,9 @@ module type S = sig
   val map : ('i -> 'o) -> ('i, 'o, unit) t
 
   val from_list : 'a list -> (void, 'a, unit) t
+
+  val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
+
 end
 
 module Make(M : Monad) : S with type 'a monad = 'a M.t

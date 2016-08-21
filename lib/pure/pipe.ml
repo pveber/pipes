@@ -35,6 +35,8 @@ module type S = sig
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
   val map : ('i -> 'o) -> ('i, 'o, unit) t
   val from_list : 'a list -> (void, 'a, unit) t
+
+  val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
 end
 
 module Make(M : Monad) = struct
@@ -162,6 +164,19 @@ module Make(M : Monad) = struct
         loop t
     in
     loop l
+
+  let rec loop f st =
+    let open Monad_infix in
+    await () >>= fun i ->
+    let (st', ys) = f st i in
+    let rec loop' ys =
+      match ys, i with
+      | [], None -> Done ()
+      | [], Some _ -> loop f st'
+      | h :: t, _ ->
+        yield h >>= fun () -> loop' t
+    in
+    loop' ys
 end
 
 include Make(struct
