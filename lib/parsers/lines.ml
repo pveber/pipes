@@ -1,4 +1,5 @@
 open Core_kernel.Std
+open Pipes_pure
 
 type state =
   | Current_line of Line.t

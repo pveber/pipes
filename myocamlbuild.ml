@@ -30,7 +30,7 @@ let parsers = make_lib "parsers"
 
 let benchmark =
   make_lib "benchmark"
-    ~internal_deps:[pure]
+    ~internal_deps:[pure ; parsers]
     ~findlib_deps:["cfstream" ; "core_bench"]
 
 let libs = [pure ; parsers ; benchmark]
