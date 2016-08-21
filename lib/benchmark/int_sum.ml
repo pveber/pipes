@@ -30,10 +30,22 @@ let pipe_int_sum () =
   in
   assert (n = s)
 
+let codensity_pipe_int_sum () =
+  let open Pipes_pure.Codensity_pipe in
+  let n =
+    run (
+      from_list l
+      $$ map succ
+      $$ fold 0 ( + )
+    )
+  in
+  assert (n = s)
+
 let command =
   Bench.make_command [
     Bench.Test.create ~name:"list" list_int_sum ;
     Bench.Test.create ~name:"stream" stream_int_sum ;
     Bench.Test.create ~name:"pipe" pipe_int_sum ;
+    Bench.Test.create ~name:"codensity_pipe" codensity_pipe_int_sum ;
   ]
 

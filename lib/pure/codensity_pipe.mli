@@ -1,10 +1,4 @@
-module type Monad = sig
-  type 'a t
-  val return : 'a -> 'a t
-  val bind : 'a t -> ('a -> 'b t) -> 'b t
-end
-
-type void
+type void = Pipe.void
 
 module type S = sig
   type 'a monad
@@ -13,11 +7,7 @@ module type S = sig
 
   type finalizer = (unit -> unit monad) option
 
-  type ('i, 'o, 'r) t =
-    | Has_output of 'o * ('i, 'o, 'r) t thunk * finalizer
-    | Needs_input of ('i option -> ('i, 'o, 'r) t)
-    | Done of 'r
-    | PipeM of ('i, 'o, 'r) t monad
+  type ('i, 'o, 'r) t
 
   val return : 'r -> (_, _, 'r) t
   val bind : ('i, 'o, 'a) t -> ('a -> ('i, 'o, 'b) t) -> ('i, 'o, 'b) t
@@ -38,6 +28,6 @@ module type S = sig
   val from_list : 'a list -> (void, 'a, unit) t
 end
 
-module Make(M : Monad) : S with type 'a monad = 'a M.t
+module Make(M : Pipe.Monad) : S with type 'a monad = 'a M.t
 
 include S with type 'a monad = 'a

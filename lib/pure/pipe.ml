@@ -7,8 +7,17 @@ module type Monad = sig
 end
 
 module type S = sig
-  type ('i, 'o, 'r) t
   type 'a monad
+
+  type 'a thunk = unit -> 'a
+
+  type finalizer = (unit -> unit monad) option
+
+  type ('i, 'o, 'r) t =
+    | Has_output of 'o * ('i, 'o, 'r) t thunk * finalizer
+    | Needs_input of ('i option -> ('i, 'o, 'r) t)
+    | Done of 'r
+    | PipeM of ('i, 'o, 'r) t monad
 
   val return : 'r -> (_, _, 'r) t
   val bind : ('i, 'o, 'a) t -> ('a -> ('i, 'o, 'b) t) -> ('i, 'o, 'b) t
