@@ -17,7 +17,7 @@ module type S = sig
     | Has_output of 'o * ('i, 'o, 'r) t thunk * finalizer
     | Needs_input of ('i option -> ('i, 'o, 'r) t)
     | Done of 'r
-    | PipeM of ('i, 'o, 'r) t monad
+    | PipeM of ('i, 'o, 'r) t monad thunk
 
   val return : 'r -> (_, _, 'r) t
   val bind : ('i, 'o, 'a) t -> ('a -> ('i, 'o, 'b) t) -> ('i, 'o, 'b) t

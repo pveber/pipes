@@ -17,7 +17,7 @@ module type S = sig
     | Has_output of 'o * ('i, 'o, 'r) t thunk * finalizer
     | Needs_input of ('i option -> ('i, 'o, 'r) t)
     | Done of 'r
-    | PipeM of ('i, 'o, 'r) t monad
+    | PipeM of ('i, 'o, 'r) t monad thunk
 
   val return : 'r -> (_, _, 'r) t
   val bind : ('i, 'o, 'a) t -> ('a -> ('i, 'o, 'b) t) -> ('i, 'o, 'b) t
@@ -52,7 +52,7 @@ module Make(M : Monad) = struct
     | Has_output of 'o * ('i, 'o, 'r) t thunk * finalizer
     | Needs_input of ('i option -> ('i, 'o, 'r) t)
     | Done of 'r
-    | PipeM of ('i, 'o, 'r) t M.t
+    | PipeM of ('i, 'o, 'r) t M.t thunk
 
   let return x = Done x
 
@@ -68,7 +68,10 @@ module Make(M : Monad) = struct
 
       | Done r -> f r
 
-      | PipeM m -> PipeM (m >>= fun p -> M.return (bind p f))
+      | PipeM m -> PipeM (fun () ->
+          m () >>= fun p ->
+          M.return (bind p f)
+        )
 
   module Monad_infix = struct
     let ( >>= ) x f = bind x f
@@ -102,18 +105,18 @@ module Make(M : Monad) = struct
         go_left f final left
 
       | Done r ->
-        PipeM (
-          finalize final >>= fun () ->
-          M.return (Done r)
-        )
+        PipeM (fun () ->
+            finalize final >>= fun () ->
+            M.return (Done r)
+          )
 
       | PipeM m ->
-        PipeM (
-          m >>= fun p ->
-          M.return (
-            go_right final left p
+        PipeM (fun () ->
+            m () >>= fun p ->
+            M.return (
+              go_right final left p
+            )
           )
-        )
 
     and go_left next_right final = function
       | Has_output (o, next, final') ->
@@ -126,10 +129,10 @@ module Make(M : Monad) = struct
         go_right None (Done r) (next_right None)
 
       | PipeM m ->
-        PipeM (
-          m >>= fun p ->
-          M.return (go_left next_right final p)
-        )
+        PipeM (fun () ->
+            m () >>= fun p ->
+            M.return (go_left next_right final p)
+          )
     in
     go_right None p q
 
@@ -137,7 +140,7 @@ module Make(M : Monad) = struct
 
   let rec run = function
     | Done r -> M.return r
-    | PipeM m -> m >>= run
+    | PipeM m -> m () >>= run
     | Has_output _ -> assert false
     | Needs_input _ -> assert false
 

@@ -3,10 +3,6 @@ type void = Pipe.void
 module type S = sig
   type 'a monad
 
-  type 'a thunk = unit -> 'a
-
-  type finalizer = (unit -> unit monad) option
-
   type ('i, 'o, 'r) t
 
   val return : 'r -> (_, _, 'r) t

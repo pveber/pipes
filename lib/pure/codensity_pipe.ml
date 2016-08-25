@@ -3,10 +3,6 @@ type void = Pipe.void
 module type S = sig
   type 'a monad
 
-  type 'a thunk = unit -> 'a
-
-  type finalizer = (unit -> unit monad) option
-
   type ('i, 'o, 'r) t
 
   val return : 'r -> (_, _, 'r) t
@@ -104,18 +100,18 @@ module Make(M : Pipe.Monad) = struct
               go_left f final left
 
             | Done r ->
-              PipeM (
-                finalize final >>= fun () ->
-                M.return (rest r)
-              )
+              PipeM (fun () ->
+                  finalize final >>= fun () ->
+                  M.return (rest r)
+                )
 
             | PipeM m ->
-              PipeM (
-                m >>= fun p ->
-                M.return (
-                  go_right final left p
+              PipeM (fun () ->
+                  m () >>= fun p ->
+                  M.return (
+                    go_right final left p
+                  )
                 )
-              )
 
           and go_left next_right final = function
             | Has_output (o, next, final') ->
@@ -128,8 +124,8 @@ module Make(M : Pipe.Monad) = struct
               go_right None (Done r) (next_right None)
 
             | PipeM m ->
-              PipeM (
-                m >>= fun p ->
+              PipeM (fun () ->
+                m () >>= fun p ->
                 M.return (go_left next_right final p)
               )
           in
