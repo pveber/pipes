@@ -32,6 +32,12 @@ module type S = sig
   val ( $$ ) : ('i, 'a, _) t -> ('a, 'o, 'r) t -> ('i, 'o, 'r) t
   val run : (void, void, 'r) t -> 'r monad
 
+  val bracket :
+    (unit -> 'a monad) ->
+    ('a -> unit monad) ->
+    ('a -> ('i, 'o, 'r) t) ->
+    ('i, 'o, 'r) t
+
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
   val map : ('i -> 'o) -> ('i, 'o, unit) t
   val from_list : 'a list -> (void, 'a, unit) t
@@ -144,6 +150,33 @@ module Make(M : Monad) = struct
     | Has_output _ -> assert false
     | Needs_input _ -> assert false
 
+
+  let bracket alloc free f =
+    let rec add_clean_up f = function
+      | Done x ->
+        PipeM (fun () ->
+            f () >>= fun () ->
+            M.return (Done x)
+          )
+
+      | Has_output (o, next, final) ->
+        Has_output (o,
+                    (fun () -> add_clean_up f (next ())),
+                    finalizer_compose (Some f) final)
+
+      | Needs_input next ->
+        Needs_input (fun i -> add_clean_up f (next i))
+
+      | PipeM m ->
+        PipeM (fun () ->
+            m () >>= fun next ->
+            M.return (add_clean_up f next)
+          )
+    in
+    PipeM (fun () ->
+        alloc () >>= fun seed ->
+        M.return (add_clean_up (fun () -> free seed) (f seed))
+      )
 
   let rec fold init f =
     Needs_input (function

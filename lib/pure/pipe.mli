@@ -32,6 +32,12 @@ module type S = sig
   val ( $$ ) : ('i, 'a, _) t -> ('a, 'o, 'r) t -> ('i, 'o, 'r) t
   val run : (void, void, 'r) t -> 'r monad
 
+  val bracket :
+    (unit -> 'a monad) ->
+    ('a -> unit monad) ->
+    ('a -> ('i, 'o, 'r) t) ->
+    ('i, 'o, 'r) t
+
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
   val map : ('i -> 'o) -> ('i, 'o, unit) t
 
