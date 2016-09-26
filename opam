@@ -1,0 +1,24 @@
+opam-version: "1.2"
+name: "pipes"
+version: "0.0.0"
+maintainer: "Philippe Veber <philippe.veber@gmail.com>"
+authors: "Philippe Veber <philippe.veber@gmail.com>"
+homepage: "https://github.com/pveber/pipes"
+bug-reports: "https://github.com/pveber/pipes/issues"
+license: "GPL3"
+dev-repo: "https://github.com/pveber/pipes.git"
+
+build: [
+  [make]
+]
+
+install: [
+  [make "META"]
+  [make "%{name}%.install"]
+]
+
+remove: ["ocamlfind" "remove" "pipes"]
+
+depends: [
+  "ocamlfind" {build}
+]
