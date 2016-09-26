@@ -47,6 +47,10 @@ module type S = sig
   val from_list : 'a list -> 'a source
   val to_list : unit -> ('a, void, 'a list) t
 
+  val all : unit -> (('a, 'b) result,
+                     void,
+                     ('a list, 'b) result) t
+
   val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
 end
 
@@ -215,6 +219,16 @@ module Make(M : Monad) = struct
       await () >>= function
       | None -> Done (List.rev accu)
       | Some x -> loop (x :: accu)
+    in
+    loop []
+
+  let all () =
+    let open Monad_infix in
+    let rec loop accu =
+      await () >>= function
+      | None -> Done (Ok (List.rev accu))
+      | Some (Ok x) -> loop (x :: accu)
+      | Some (Error _ as e) -> Done e
     in
     loop []
 

@@ -47,6 +47,10 @@ module type S = sig
   val from_list : 'a list -> 'a source
   val to_list : unit -> ('a, void, 'a list) t
 
+  val all : unit -> (('a, 'b) result,
+                     void,
+                     ('a list, 'b) result) t
+
   val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
 
 end
