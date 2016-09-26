@@ -48,5 +48,3 @@ module type S = sig
 end
 
 module Make(M : Monad) : S with type 'a monad = 'a M.t
-
-include S with type 'a monad = 'a

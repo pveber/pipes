@@ -214,9 +214,3 @@ module Make(M : Monad) = struct
     in
     loop' ys
 end
-
-include Make(struct
-    type 'a t = 'a
-    let return x = x
-    let bind x f = f x
-  end)
