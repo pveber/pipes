@@ -32,11 +32,6 @@ module Make(M : Pipe.Monad) = struct
 
   type 'a monad = 'a M.t
 
-  type 'a thunk = unit -> 'a
-
-  type finalizer = (unit -> unit monad) option
-
-
   type ('i, 'o, 'r) t = {
     unPipe : 'x. ('r -> ('i, 'o, 'x) P.t) -> ('i, 'o, 'x) P.t
   }
