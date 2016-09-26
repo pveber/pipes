@@ -20,7 +20,7 @@ let from_file ?(buffer_size = 64 * 1024) fn =
     (fun ic ->
        let rec loop () =
          match input_string buffer_size ic with
-         | Some i -> yield (i :> string) >>= loop
+         | Some i -> yield i >>= loop
          | None -> Done ()
        in
        loop ())

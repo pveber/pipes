@@ -20,7 +20,7 @@ let stream_int_sum () =
   assert (n = s)
 
 let pipe_int_sum () =
-  let open Pipes_pure.Pipe in
+  let open Pipes_unix.Pipe in
   let n =
     run (
       from_list l

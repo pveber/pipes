@@ -19,6 +19,9 @@ module type S = sig
     | Done of 'r
     | PipeM of ('i, 'o, 'r) t monad thunk
 
+  type 'a source = (void, 'a, unit) t
+  type 'a sink = ('a, void, unit) t
+
   val return : 'r -> (_, _, 'r) t
   val bind : ('i, 'o, 'a) t -> ('a -> ('i, 'o, 'b) t) -> ('i, 'o, 'b) t
 
@@ -41,7 +44,7 @@ module type S = sig
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
   val map : ('i -> 'o) -> ('i, 'o, unit) t
 
-  val from_list : 'a list -> (void, 'a, unit) t
+  val from_list : 'a list -> 'a source
 
   val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
 

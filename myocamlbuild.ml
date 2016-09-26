@@ -34,10 +34,10 @@ let unix = make_lib "unix"
 
 let benchmark =
   make_lib "benchmark"
-    ~internal_deps:[pure ; parsers]
+    ~internal_deps:[unix ; parsers]
     ~findlib_deps:["cfstream" ; "core_bench"]
 
-let libs = [pure ; parsers ; benchmark ; unix]
+let libs = [pure ; parsers ; unix ; benchmark ]
 
 let apps = [
   make_app "bench" ~internal_deps:[benchmark]

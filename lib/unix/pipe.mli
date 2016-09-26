@@ -1,5 +1,5 @@
 include Pipes_pure.Pipe.S with type 'a monad = 'a
 
-val from_file : string -> (void, string, unit) t
+val from_file : ?buffer_size:int -> string -> bytes source
 
-val to_file : string -> (string, void, unit) t
+val to_file : string -> string sink
