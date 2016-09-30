@@ -9,7 +9,8 @@ license: "GPL3"
 dev-repo: "https://github.com/pveber/pipes.git"
 
 build: [
-  [make]
+  [make byte]
+  [make native]
 ]
 
 install: [
@@ -21,4 +22,5 @@ remove: ["ocamlfind" "remove" "pipes"]
 
 depends: [
   "ocamlfind" {build}
+  "core_kernel"
 ]
