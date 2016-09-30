@@ -22,5 +22,6 @@ remove: ["ocamlfind" "remove" "pipes"]
 
 depends: [
   "ocamlfind" {build}
+  "cfstream"
   "core_kernel"
 ]
