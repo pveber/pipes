@@ -43,7 +43,10 @@ let apps = [
   make_app "bench" ~internal_deps:[benchmark]
 ]
 
-let optional_pkgs = ["async"; "lwt"]
+let optional_pkgs = ["async" ;
+                     "cfstream" ;
+                     "core_bench" ;
+                     "lwt"]
 
 let items =
   List.filter ~f:(fun x -> Project.dep_opts_sat x optional_pkgs)
