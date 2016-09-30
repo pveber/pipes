@@ -49,8 +49,10 @@ let optional_pkgs = ["async" ;
                      "lwt"]
 
 let items =
-  List.filter ~f:(fun x -> Project.dep_opts_sat x optional_pkgs)
-    libs@apps
+  List.filter (libs @ apps) ~f:(fun x ->
+      Project.dep_opts_sat x optional_pkgs
+    )
+
 
 let ocamlinit_postfix = [
 ]
