@@ -9,8 +9,8 @@ license: "GPL3"
 dev-repo: "https://github.com/pveber/pipes.git"
 
 build: [
-  [make byte]
-  [make native]
+  [make "byte"]
+  [make "native"]
 ]
 
 install: [
