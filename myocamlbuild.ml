@@ -102,7 +102,11 @@ let () =
       List.iter libs ~f:build_lib;
       List.iter apps ~f:build_app;
 
-      Findlib.build_meta_file (meta_file ~version libs);
+      (match meta_file ~version libs with
+       | Some x -> Findlib.build_meta_file x
+       | None -> ()
+      );
+
       build_static_file ".merlin" (merlin_file items);
       build_static_file (sprintf "%s.install" project_name)
         (install_file items);
