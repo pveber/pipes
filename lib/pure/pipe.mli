@@ -43,6 +43,7 @@ module type S = sig
 
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
   val map : ('i -> 'o) -> ('i, 'o, unit) t
+  val filter : ('i -> bool) -> ('i, 'i, unit) t
 
   val from_list : 'a list -> 'a source
   val to_list : unit -> ('a, void, 'a list) t
