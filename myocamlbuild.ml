@@ -8,7 +8,7 @@ let version = "dev"
 let make_lib ?findlib_deps ?internal_deps ?ml_files ?mli_files lib_name : Project.item =
   let name = sprintf "%s-%s" project_name lib_name in
   Project.lib name
-    ~pkg:(sprintf "%s.%s" project_name lib_name)
+    ~install:(`Findlib (sprintf "%s.%s" project_name lib_name))
     ~dir:(sprintf "lib/%s" lib_name)
     ~style:(`Pack (String.map (function '-' -> '_' | c -> c) name))
     ?findlib_deps
@@ -107,12 +107,12 @@ let () =
        | None -> ()
       );
 
-      build_static_file ".merlin" (merlin_file items);
+      build_static_file ".merlin" (fun () -> merlin_file items);
       build_static_file (sprintf "%s.install" project_name)
-        (install_file items);
+        (fun () -> install_file items);
       build_static_file ".ocamlinit"
-        (ocamlinit_file items ~postfix:ocamlinit_postfix);
+        (fun () -> ocamlinit_file items ~postfix:ocamlinit_postfix);
       build_static_file "project.mk"
-        (makefile items ~project_name);
+        (fun () -> makefile items ~project_name);
     )
   | _ -> ()
