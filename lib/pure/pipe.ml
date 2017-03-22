@@ -44,6 +44,7 @@ module type S = sig
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
   val map : ('i -> 'o) -> ('i, 'o, unit) t
   val filter : ('i -> bool) -> ('i, 'i, unit) t
+  val filter_map : ('i -> 'o option) -> ('i, 'o, unit) t
 
   val from_list : 'a list -> 'a source
   val to_list : unit -> ('a, void, 'a list) t
@@ -211,6 +212,15 @@ module Make(M : Monad) = struct
     | Some x ->
       if f x then yield x >>= fun () -> filter f
       else filter f
+
+  let rec filter_map f =
+    let open Monad_infix in
+    await () >>= function
+    | None -> return ()
+    | Some x ->
+      match f x with
+      | None -> filter_map f
+      | Some y -> yield y >>= fun () -> filter_map f
 
   let from_list l =
     let open Monad_infix in
