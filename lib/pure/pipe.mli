@@ -54,6 +54,7 @@ module type S = sig
                      ('a list, 'b) result) t
 
   val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
+  val loop' : ('a -> 'b option -> ('a * 'c list, 'd) result) -> 'a -> ('b, 'c, (unit, 'd) result) t
 
 end
 

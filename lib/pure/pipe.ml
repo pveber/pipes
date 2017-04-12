@@ -54,6 +54,7 @@ module type S = sig
                      ('a list, 'b) result) t
 
   val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
+  val loop' : ('a -> 'b option -> ('a * 'c list, 'd) result) -> 'a -> ('b, 'c, (unit, 'd) result) t
 end
 
 module Make(M : Monad) = struct
@@ -263,4 +264,19 @@ module Make(M : Monad) = struct
         yield h >>= fun () -> loop' t
     in
     loop' ys
+
+  let rec loop' f st =
+    let open Monad_infix in
+    await () >>= fun i ->
+    match f st i with
+    | Ok (st', ys) ->
+      let rec inner ys =
+        match ys, i with
+        | [], None -> Done (Ok ())
+        | [], Some _ -> loop' f st'
+        | h :: t, _ ->
+          yield h >>= fun () -> inner t
+      in
+      inner ys
+    | Error _ as e -> Done e
 end
