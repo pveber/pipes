@@ -1,4 +1,4 @@
-open Core.Std
+open Core
 open CFStream
 open Core_bench.Std
 
@@ -31,7 +31,7 @@ let pipe_int_sum () =
   assert (n = s)
 
 let codensity_pipe_int_sum () =
-  let open Pipes_pure.Codensity_pipe in
+  let open Codensity_pipe in
   let n =
     run (
       from_list l

@@ -1,5 +1,5 @@
-open Core.Std
-open Pipes_benchmark
+open Core
+open Pipes_bench
 
 let () =
   Command.(

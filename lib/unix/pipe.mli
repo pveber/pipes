@@ -1,4 +1,4 @@
-include Pipes_pure.Pipe.S with type 'a monad = 'a
+include Pipes.Pipe.S with type 'a monad = 'a
 
 val from_file : ?buffer_size:int -> string -> bytes source
 

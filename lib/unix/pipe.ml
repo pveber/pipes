@@ -1,4 +1,4 @@
-include Pipes_pure.Pipe.Make(struct
+include Pipes.Pipe.Make(struct
     type 'a t = 'a
     let return x = x
     let bind x f = f x

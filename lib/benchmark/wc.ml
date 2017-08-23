@@ -1,4 +1,4 @@
-open Core.Std
+open Core
 open CFStream
 open Core_bench.Std
 

@@ -1,4 +1,4 @@
-open Pipes_pure
+open Pipes
 
 type state
 

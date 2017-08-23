@@ -1,0 +1,7 @@
+(jbuild_version 1)
+
+(library
+ ((name pipes_bench)
+  (public_name pipes.bench)
+  (libraries (cfstream core core_bench pipes.parsers))
+))

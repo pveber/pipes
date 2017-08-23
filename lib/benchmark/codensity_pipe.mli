@@ -1,3 +1,5 @@
+open Pipes
+
 type void = Pipe.void
 
 module type S = sig
