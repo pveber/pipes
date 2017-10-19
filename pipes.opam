@@ -8,17 +8,7 @@ bug-reports: "https://github.com/pveber/pipes/issues"
 license: "GPL3"
 dev-repo: "https://github.com/pveber/pipes.git"
 
-build: [
-  [make "byte"]
-  [make "native"]
-]
-
-install: [
-  [make "META"]
-  [make "%{name}%.install"]
-]
-
-remove: ["ocamlfind" "remove" "pipes"]
+build: ["jbuilder" "build" "-p" name "-j" jobs]
 
 depends: [
   "ocamlfind" {build}
