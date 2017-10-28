@@ -56,6 +56,7 @@ module type S = sig
   val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
   val loop' : ('a -> 'b option -> ('a * 'c list, 'd) result) -> 'a -> ('b, 'c, (unit, 'd) result) t
 
+  val drop : int -> ('a, 'a, unit) t
 end
 
 module Make(M : Monad) : S with type 'a monad = 'a M.t

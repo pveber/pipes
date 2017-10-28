@@ -55,6 +55,8 @@ module type S = sig
 
   val loop : ('a -> 'b option -> 'a * 'c list) -> 'a -> ('b, 'c, unit) t
   val loop' : ('a -> 'b option -> ('a * 'c list, 'd) result) -> 'a -> ('b, 'c, (unit, 'd) result) t
+
+  val drop : int -> ('a, 'a, unit) t
 end
 
 module Make(M : Monad) = struct
@@ -279,4 +281,17 @@ module Make(M : Monad) = struct
       in
       inner ys
     | Error _ as e -> Done e
+
+  let drop n =
+    let open Monad_infix in
+    let rec loop k =
+      await () >>= function
+      | None -> return ()
+      | Some x ->
+        if k <= 0 then
+          yield x >>= fun () -> loop 0
+        else
+          loop (k - 1)
+    in
+    loop n
 end
