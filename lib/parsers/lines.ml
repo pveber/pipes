@@ -1,6 +1,3 @@
-open Core_kernel.Std
-open Pipes
-
 type state =
   | Current_line of Line.t
   | Finished
