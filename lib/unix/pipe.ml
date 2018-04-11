@@ -11,7 +11,7 @@ let input_string len =
   fun ic ->
     let n = input ic buf 0 len in
     if n = 0 then None
-    else Some (Bytes.sub buf 0 n)
+    else Some (Bytes.sub_string buf 0 n)
 
 let from_file ?(buffer_size = 64 * 1024) fn =
   bracket
