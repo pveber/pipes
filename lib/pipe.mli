@@ -43,6 +43,7 @@ module type S = sig
 
   val fold : 'r -> ('i -> 'r -> 'r) -> ('i, void, 'r) t
   val map : ('i -> 'o) -> ('i, 'o, unit) t
+  val mapi : (int -> 'i -> 'o) -> ('i, 'o, unit) t
   val filter : ('i -> bool) -> ('i, 'i, unit) t
   val filter_map : ('i -> 'o option) -> ('i, 'o, unit) t
 
