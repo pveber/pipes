@@ -1,0 +1,4 @@
+(library
+ (name pipes_parsers)
+ (public_name pipes.parsers)
+ (libraries core_kernel pipes.unix))

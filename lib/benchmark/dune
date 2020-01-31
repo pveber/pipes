@@ -1,0 +1,3 @@
+(library
+ (name pipes_bench)
+ (libraries cfstream core core_bench pipes.parsers))

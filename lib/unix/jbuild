@@ -1,7 +1,0 @@
-(jbuild_version 1)
-
-(library
- ((name pipes_unix)
-  (public_name pipes.unix)
-  (libraries (pipes))
-))

@@ -1,0 +1,4 @@
+(library
+ (name pipes_unix)
+ (public_name pipes.unix)
+ (libraries pipes))
